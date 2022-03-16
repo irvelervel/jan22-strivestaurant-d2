@@ -39,11 +39,91 @@ class ReservationForm extends Component {
     });
   };
 
+  // this function crashes
+  //   handleClick() {
+  //     console.log(this);
+  //     // this here is UNDEFINED
+  //     // because a normal function has its own scope
+  //     // so "this" is a different thing here!
+  //     this.setState({
+  //       yoji: false,
+  //     });
+  //   }
+
+  handleSubmit = async (e) => {
+    e.preventDefault();
+    console.log(this.state.reservation);
+    // CRUD
+    // for reading values, you use GET
+    // for creating values, you use POST
+    // for updating values, you use PUT
+    // for deleting values, you use DELETE
+
+    // let's recap quickly how network calls work
+    // and the fetch()
+
+    // let's recap how the chained thens method works:
+    // fetch("https://striveschool-api.herokuapp.com/api/reservation", {
+    //   method: "POST",
+    //   body: JSON.stringify(this.state.reservation),
+    //   headers: {
+    //     "Content-Type": "application/json",
+    //   },
+    // })
+    //   .then((response) => {
+    //     console.log(response);
+    // if (response.ok) {
+    //   alert("reservation saved!");
+    // } else {
+    //   alert("something went wrong!");
+    // }
+    //   })
+    //   .catch((e) => {
+    //     console.log("error was", e);
+    //   });
+
+    // let's recap how async/await works
+    try {
+      let response = await fetch(
+        "https://striveschool-api.herokuapp.com/api/reservation",
+        {
+          method: "POST",
+          body: JSON.stringify(this.state.reservation),
+          headers: {
+            "Content-Type": "application/json",
+          },
+        }
+      );
+      console.log(response);
+      if (response.ok) {
+        alert("reservation saved!");
+        this.emptyForm();
+      } else {
+        alert("something went wrong!");
+      }
+    } catch (error) {
+      console.log("error was", error);
+    }
+  };
+
+  emptyForm = () => {
+    this.setState({
+      reservation: {
+        name: "",
+        phone: "",
+        numberOfPeople: 1,
+        smoking: false,
+        dateTime: "",
+        specialRequests: "",
+      },
+    });
+  };
+
   render() {
     return (
       <div>
         <h2>RESERVE A TABLE NOW!!</h2>
-        <Form>
+        <Form onSubmit={this.handleSubmit}>
           <Form.Group>
             <Form.Label>Your name</Form.Label>
             {/* Form.Control is the <input /> */}
